@@ -10,21 +10,24 @@ def average(numbers):
 def median(numbers):
     if not numbers:
         return 0
-    # Sorting is required to find the median
     sorted_data = sorted(numbers)
     n = len(sorted_data)
     mid = n // 2
-    
     if n % 2 == 0:
-        # If even, average the two middle numbers
         return (sorted_data[mid - 1] + sorted_data[mid]) / 2
     else:
-        # If odd, return the middle number
         return sorted_data[mid]
 
-# New: Function to count observations
+# Function to count observations
 def obs(numbers):
     return len(numbers)
+
+# New: Function to find the biggest number
+def biggest(numbers):
+    """Returns the maximum value in the list."""
+    if not numbers:
+        return None
+    return max(numbers)
 
 # Getting the argument
 args = sys.argv[1:]
@@ -34,13 +37,13 @@ column_id = None
 filename = None
 do_average = False
 do_median = False
-do_obs = False  # New flag for observations
+do_obs = False
+do_biggest = False  # New flag for biggest
 
 # Loop through to find the flags
 while len(args) > 0:
     arg = args.pop(0)
     if arg == "-c":
-        # Check if there's actually an argument after -c
         if args:
             column_id = args.pop(0)
         else:
@@ -51,6 +54,8 @@ while len(args) > 0:
         do_median = True
     elif arg == "-n":
         do_obs = True
+    elif arg == "-b":
+        do_biggest = True
     else:
         filename = arg 
 
@@ -68,10 +73,7 @@ try:
     with open(filename, "r") as input_file:
         data_list = []
         for line in input_file:
-            # Using split('\t') 
             split_line = line.strip().split('\t')
-            
-            # Skip empty lines
             if not any(split_line):
                 continue
 
@@ -82,7 +84,6 @@ try:
                     if val:
                         data_list.append(float(val))
             else:
-                # Getting all columns
                 for item in split_line:
                     if item:
                         data_list.append(float(item))
@@ -101,3 +102,6 @@ if do_median:
 
 if do_obs:
     print(f"Number of Observations: {obs(data_list)}")
+
+if do_biggest:
+    print(f"Biggest: {biggest(data_list)}")
