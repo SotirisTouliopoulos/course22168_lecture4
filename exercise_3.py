@@ -1,26 +1,54 @@
-
 import sys
 
-# save command line input parameters to list
-command_line_input = sys.argv
-column_id = (command_line_input[1]).split("-")[1]
-filename = command_line_input[2]
+#Average function definition
+def average(numbers):
+    if not numbers:
+        return 0
+    return sum(numbers) / len(numbers)
 
-# control whether column id is not an integer
-try:
-    int(column_id)
-except ValueError:
-    # This raises an error and stops the script immediately
-    raise ValueError(f"Error in parsing column id. Input is not a valid integer.")
+#Getting the argument
+args = sys.argv[1:]
 
-# control whether filename does not exist
+#Initializing variables
+column_id = None
+filename = None
+do_average = False
+
+#Loop through to find the flags
+while len(args) > 0:
+    arg = args.pop(0)
+    if arg == "-c":
+        column_id = args.pop(0)
+    elif arg == "-a":
+        do_average = True
+    else:
+        filename = arg #If it's not a flag, it's the filename
+
+if column_id:
+    try:
+        int(column_id)
+    except ValueError:
+        raise ValueError(f"Error in parsing column id. Input is not a valid integer.")
+
+#File reading 
 try:
-    with open(filename, "r") as input:
-        k_column_list = []
-        for line in input:
-            split_line = line.split()
-            k_column_value = split_line[int(column_id) -1]
-            k_column_list.append(k_column_value)
+    with open(filename, "r") as input_file:
+        data_list = []
+        for line in input_file:
+            #Using split('\t') 
+            split_line = line.strip().split('\t')
+            
+            if column_id:
+                #Getting specific column
+                val = split_line[int(column_id) - 1]
+                data_list.append(float(val))
+            else:
+                #Getting all columns
+                for item in split_line:
+                    data_list.append(float(item))
 
 except FileNotFoundError:
-    raise FileNotFoundError(f"The file '{filename}' was not found. Please check the path.")
+    raise FileNotFoundError(f"The file '{filename}' was not found.")
+
+if do_average:
+    print(average(data_list))
