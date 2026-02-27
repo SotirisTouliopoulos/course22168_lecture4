@@ -22,7 +22,7 @@ def exercise_9_function(input_file, output_file):
             top_10_running.append([total_accession_score, line])
             
             # Sort the running list (High to Low)
-            top_10_running.sort(reverse=False)
+            top_10_running.sort(reverse=True)
             
             # Keep only the top 10; discard anything beyond that
             # This prevents the list from growing with the file size
