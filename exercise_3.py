@@ -22,12 +22,31 @@ def median(numbers):
 def obs(numbers):
     return len(numbers)
 
-# New: Function to find the biggest number
+# Function to find the biggest number
 def biggest(numbers):
-    """Returns the maximum value in the list."""
     if not numbers:
         return None
     return max(numbers)
+
+# New: Function to compute the 5% trimmed mean
+def trimmedmean(numbers):
+    if not numbers:
+        return 0
+    n = len(numbers)
+    if n < 20:
+        # If there are fewer than 20 numbers, 5% is less than 1 element.
+        # Usually, we just return the standard average here.
+        return average(numbers)
+    
+    sorted_data = sorted(numbers)
+    # Calculate 5% of the total observations
+    trim_count = int(n * 0.05)
+    
+    # Slice the list: remove the first 'trim_count' and the last 'trim_count'
+    # Example: if trim_count is 2, slice is [2 : -2]
+    trimmed_data = sorted_data[trim_count : n - trim_count]
+    
+    return sum(trimmed_data) / len(trimmed_data)
 
 # Getting the argument
 args = sys.argv[1:]
@@ -38,7 +57,8 @@ filename = None
 do_average = False
 do_median = False
 do_obs = False
-do_biggest = False  # New flag for biggest
+do_biggest = False
+do_trimmed = False  # New flag for trimmed mean
 
 # Loop through to find the flags
 while len(args) > 0:
@@ -56,6 +76,8 @@ while len(args) > 0:
         do_obs = True
     elif arg == "-b":
         do_biggest = True
+    elif arg == "-t":
+        do_trimmed = True
     else:
         filename = arg 
 
@@ -105,3 +127,6 @@ if do_obs:
 
 if do_biggest:
     print(f"Biggest: {biggest(data_list)}")
+
+if do_trimmed:
+    print(f"Trimmed Mean (5%): {trimmedmean(data_list)}")
