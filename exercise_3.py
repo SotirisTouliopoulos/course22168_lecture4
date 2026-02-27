@@ -28,25 +28,30 @@ def biggest(numbers):
         return None
     return max(numbers)
 
-# New: Function to compute the 5% trimmed mean
+# Function to compute the 5% trimmed mean
 def trimmedmean(numbers):
     if not numbers:
         return 0
     n = len(numbers)
     if n < 20:
-        # If there are fewer than 20 numbers, 5% is less than 1 element.
-        # Usually, we just return the standard average here.
         return average(numbers)
     
     sorted_data = sorted(numbers)
-    # Calculate 5% of the total observations
     trim_count = int(n * 0.05)
-    
-    # Slice the list: remove the first 'trim_count' and the last 'trim_count'
-    # Example: if trim_count is 2, slice is [2 : -2]
     trimmed_data = sorted_data[trim_count : n - trim_count]
-    
     return sum(trimmed_data) / len(trimmed_data)
+
+# New: Function to find the most frequent number
+def frequent(numbers):
+    if not numbers:
+        return None
+    counts = {}
+    for num in numbers:
+        counts[num] = counts.get(num, 0) + 1
+    
+    # Find the key with the maximum value (highest frequency)
+    most_frequent = max(counts, key=counts.get)
+    return most_frequent
 
 # Getting the argument
 args = sys.argv[1:]
@@ -58,7 +63,8 @@ do_average = False
 do_median = False
 do_obs = False
 do_biggest = False
-do_trimmed = False  # New flag for trimmed mean
+do_trimmed = False
+do_frequent = False  # New flag for frequency
 
 # Loop through to find the flags
 while len(args) > 0:
@@ -78,6 +84,8 @@ while len(args) > 0:
         do_biggest = True
     elif arg == "-t":
         do_trimmed = True
+    elif arg == "-f":
+        do_frequent = True
     else:
         filename = arg 
 
@@ -130,3 +138,6 @@ if do_biggest:
 
 if do_trimmed:
     print(f"Trimmed Mean (5%): {trimmedmean(data_list)}")
+
+if do_frequent:
+    print(f"Most Frequent: {frequent(data_list)}")
